@@ -25,3 +25,104 @@
 #container a {
   text-decoration: none;
 }
+ion-content {
+  .bg{
+    background: linear-gradient(250deg,#FF0000,#F12894,#D323CD,#F12B5B,#F54526);
+    background-size: 400% 400%;
+    animation: colorchange 15s ease-out infinite;
+  }
+  @keyframes colorchange{
+    0%{background-position: 0% 99%;}
+    50%{background-position: 100% 1%;}
+    100%{background-position: 10% 90%;}
+  }
+}
+
+// body {
+//   background: #1a1e23;
+//   margin: 0;
+// }
+
+$bubble-count: 50;
+$sway-type: "sway-left-to-right", "sway-right-to-left";
+
+@function random_range($min, $max) {
+  $rand: random();
+  $random_range: $min + floor($rand * (($max - $min) + 1));
+  @return $random_range;
+}
+
+@function sample($list) {
+  @return nth($list, random(length($list)));
+}
+
+.bubbles {
+  position: relative;
+  width: 50%;
+
+  overflow: hidden;
+}
+
+.bubble {
+  position: absolute;
+  left: var(--bubble-left-offset);
+  bottom: -230%;
+  opacity: 0.5;
+  display: block;
+  width: var(--bubble-radius);
+  height: var(--bubble-radius);
+  border-radius: 50%;
+  animation: float-up var(--bubble-float-duration) var(--bubble-float-delay) ease-in infinite;
+
+
+  &::before {
+    position: absolute;
+    content: '';
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+
+    background: linear-gradient(90deg, rgb(253, 66, 75) 0%, rgb(229, 255, 0) 35%, rgb(4, 255, 4) 100%);
+    border-radius: inherit;
+    animation: var(--bubble-sway-type) var(--bubble-sway-duration) var(--bubble-sway-delay) ease-in-out alternate infinite;
+  }
+
+  @for $i from 0 through $bubble-count {
+    &:nth-child(#{$i}) {
+      --bubble-left-offset: #{random_range(0vw, 100vw)};
+      --bubble-radius: #{random_range(1vw, 20vw)};
+      --bubble-float-duration: #{random_range(10s, 30s)};
+      --bubble-sway-duration: #{random_range(4s, 6s)};
+      --bubble-float-delay: #{random_range(0s, 4s)};
+      --bubble-sway-delay: #{random_range(0s, 4s)};
+      --bubble-sway-type: #{sample($sway-type)};
+    }
+  }
+}
+
+@keyframes float-up {
+  to {
+    transform: translateY(-320vh);
+  }
+}
+
+@keyframes sway-left-to-right {
+  from {
+    transform: translateX(-100%);
+  }
+
+  to {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes sway-right-to-left {
+  from {
+    transform: translateX(100%);
+  }
+
+  to {
+    transform: translateX(-100%);
+  }
+}
